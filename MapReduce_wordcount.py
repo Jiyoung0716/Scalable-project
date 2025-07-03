@@ -8,7 +8,7 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 
-# AWS 설정
+
 s3 = boto3.client('s3', region_name='us-east-1')
 S3_BUCKET_NAME = "bookreview-results"
 
@@ -18,7 +18,6 @@ def tokenize(text):
     text = re.sub(r'[^a-z\s]', '', text)
     return text.split()
 
-# 단어 수 세기
 def count_words(texts):
     counter = Counter()
     for text in texts:
@@ -69,7 +68,6 @@ def plot_all_top_words(word_data):
     except:
         pass
 
-# 성능 요약 시각화
 def plot_performance(perf_data):
     labels = [f"{d['percent']}%" for d in perf_data]
     x = np.arange(len(labels))
@@ -95,7 +93,7 @@ def plot_performance(perf_data):
     ax2 = ax1.twinx()
     ax2.plot(x, processing_time, color='orange', marker='o', linewidth=2, label='Processing Time (s)')
     
-    # Line: Latency (더 작은 값 강조)
+    # Line: Latency
     ax2.plot(x, latency, color='red', marker='s', linewidth=2, label='Latency (ms/row)')
     ax2.set_ylabel('Processing Time / Latency', color='black')
     ax2.tick_params(axis='y', labelcolor='black')
@@ -130,7 +128,7 @@ def plot_performance(perf_data):
     except:
         pass
 
-# WordCount 처리
+
 def process_wordcount(percent):
     print(f"\n🔁 Running WordCount for {percent}% dataset...")
     s3_input_key = f"cleaned/cleaned_books_{percent}.csv"
@@ -178,7 +176,7 @@ def process_wordcount(percent):
     except:
         pass
 
-# 메인 함수
+
 def main():
     for percent in [25, 50, 75, 100]:
         process_wordcount(percent)

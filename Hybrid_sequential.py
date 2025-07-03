@@ -5,27 +5,21 @@ import os
 from collections import Counter
 import boto3
 
-# =============================
-# 🔧 설정
-# =============================
+
 S3_BUCKET = "bookreview-results"
 S3_KEY = "cleaned/cleaned_books_100.csv"
 LOCAL_FILE = "temp_100.csv"
 OUTPUT_FILE = "benchmark_metrics_sequential.csv"
 LOADS = [25, 50, 75, 100]  # 데이터 비율 (%)
 
-# =============================
-# 📥 S3에서 파일 다운로드
-# =============================
+
 def download_from_s3():
     print("\n📥 Downloading data from S3...")
     s3 = boto3.client("s3")
     s3.download_file(S3_BUCKET, S3_KEY, LOCAL_FILE)
     print("✅ complete  Download")
 
-# =============================
-# 🔠 워드카운트 함수 (순차적 처리)
-# =============================
+
 def word_count(texts):
     counter = Counter()
     for text in texts:
@@ -34,9 +28,7 @@ def word_count(texts):
             counter.update(words)
     return counter
 
-# =============================
-# 😊 감정 분석 카운트 함수 (순차적 처리)
-# =============================
+
 def sentiment_count(sentiments):
     counter = Counter()
     for s in sentiments:
@@ -44,9 +36,7 @@ def sentiment_count(sentiments):
             counter[s.lower()] += 1
     return counter
 
-# =============================
-# 🏁 실행
-# =============================
+
 def run_sequential_tasks():
     download_from_s3()
     df = pd.read_csv(LOCAL_FILE)
@@ -118,7 +108,6 @@ def run_sequential_tasks():
     # 임시 파일 삭제
     if os.path.exists(LOCAL_FILE):
         os.remove(LOCAL_FILE)
-        #print(f"🗑️ 임시 파일 {LOCAL_FILE} 삭제 완료.")
 
 def upload_to_s3(local_file, bucket, s3_key):
     s3 = boto3.client("s3")

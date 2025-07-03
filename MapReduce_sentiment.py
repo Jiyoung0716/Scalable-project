@@ -7,7 +7,6 @@ import boto3
 import os
 import time
 
-# S3에서 full 데이터 다운로드
 s3 = boto3.client("s3", region_name="us-east-1")
 bucket = "bookreview-results"
 key = "cleaned/cleaned_books_100.csv"
@@ -25,7 +24,6 @@ performance = []
 sentiment_summary = {}
 BASE_PATH = "/home/ubuntu"
 
-# 감정 분석
 def count_sentiments(sentiments):
     counter = Counter()
     for s in sentiments:
@@ -39,7 +37,6 @@ def merge_counters(results):
         total.update(c)
     return total
 
-# 퍼센트별 처리
 def process_sentiment(df_full, percent):
     print(f"\n🔁 Running Sentiment Analysis for {percent}% dataset...")
     subset_len = int(len(df_full) * percent / 100)
@@ -71,7 +68,7 @@ def process_sentiment(df_full, percent):
 
     print(f"⏱️ Time: {elapsed:.2f}s | 📈 Throughput: {throughput:.2f} rows/s | 🕒 Latency: {latency:.6f}s/row")
 
-# 파이차트
+
 def plot_pie_charts(data):
     fig, axs = plt.subplots(2, 2, figsize=(10, 8))
     labels = ["positive", "neutral", "negative"]
@@ -104,7 +101,7 @@ def plot_pie_charts(data):
     except Exception as e:
         print(f"❌ Failed to upload pie chart: {e}")
 
-# 성능 그래프
+
 def plot_performance(perf_data):
     labels = [f"{d['percent']}%" for d in perf_data]
     x = np.arange(len(labels))
@@ -152,7 +149,7 @@ def plot_performance(perf_data):
     except Exception as e:
         print(f"❌ Failed to upload performance chart: {e}")
 
-# 메인
+
 def main():
     try:
         df = pd.read_csv(local_path)
